@@ -4,7 +4,7 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <Bounce2.h>
-#include "traffic.h"
+//#include "traffic.h"
 
 #define red 26
 #define yellow 25
