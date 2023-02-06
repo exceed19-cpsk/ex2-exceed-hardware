@@ -2,19 +2,21 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <Bounce2.h>
+#include <bits/stdc++.h>
+using namespace std;
 
 const String baseUrl = "https://exceed-hardware-stamp465.koyeb.app";
+const String AGurl = "https://exceed-hardware-stamp465.koyeb.app/all_traffic";
 
-const String point = "กลุ่มที่";
-const int nearby_1 = "กลุ่มใกล้เคียง (กลุ่มที่ +-1)";
-const int nearby_2 = "กลุ่มใกล้เคียง (กลุ่มที่ +-1)";
+const String point = "1";
+const String nearby_1 = "2";
+const String nearby_2 = "15";
 
-void GET_traffic()
-{
+void GET_traffic() {
+  Serial.println("Start!!!");
   DynamicJsonDocument doc(65536);
   HTTPClient http;
-  const String url = baseUrl + "/all_traffic";
-  http.begin(url);
+  http.begin(AGurl);
 
   Serial.println("Nearby traffic");
   int httpResponseCode = http.GET();
@@ -22,24 +24,15 @@ void GET_traffic()
   {
     String payload = http.getString();
     deserializeJson(doc, payload);
-
-    // *** write your code here ***
-    // set up JSON
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
+    Serial.println(doc["all_traffic"].size());
+    JsonArray all_traffic = doc["all_traffic"].as<JsonArray>();
+    for (JsonObject x : all_traffic) {
+      String tmp = x["point"].as<String>();
+      if (tmp == point || tmp == nearby_1 || tmp == nearby_2) {
+        Serial.println("Point: " + tmp);
+        Serial.println("Traffic: " + x["traffic"].as<String>());
+      }
+    }
   }
   else
   {
@@ -59,11 +52,8 @@ void POST_traffic(String led)
   http.addHeader("Content-Type", "application/json");
 
   DynamicJsonDocument doc(2048);
-  // *** write your code here ***
-  // set up JSON
-  // .
-  // .
-  // .
+  doc["code"] = "317cwk";
+  doc["traffic"] = led;
   serializeJson(doc, json);
 
   Serial.println("POST " + led);
