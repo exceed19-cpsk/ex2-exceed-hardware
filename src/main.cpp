@@ -29,8 +29,10 @@ void setup() {
 }
 void loop(){
     debouncer.update();
-    if (debouncer.fell() && stage == 0) { 
-      stage = 1;
+    if (debouncer.fell() && stage == 0) { //if button pressed and stage is green
+      stage = 1; //go to stage 1
+      POST_traffic(stage);
+      
     }
     if (stage == 0) { //Green
         digitalWrite(GREEN, HIGH);
@@ -43,6 +45,8 @@ void loop(){
         digitalWrite(RED, LOW);
         delay(8000); //wait 8 seconds
         stage = 2; //go to stage 2
+        POST_traffic(stage);
+        GET_traffic();
     } 
     else if (stage == 2) { //Red
         digitalWrite(GREEN, LOW);
@@ -52,6 +56,8 @@ void loop(){
         lumine = map(analogRead(LDR),1500,3500,0,255);
         if (lumine < 100) { //if dark go to stage 0
             stage = 0;
+            POST_traffic(stage);
+            GET_traffic();
         }
     }
     Serial.println(stage); //print stage
