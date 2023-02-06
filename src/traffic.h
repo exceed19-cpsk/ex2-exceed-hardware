@@ -17,17 +17,18 @@ void GET_traffic()
   http.begin(url);
 
   Serial.println("Nearby traffic");
+  Serial.println(GET + nearby_1)
   int httpResponseCode = http.GET();
   if (httpResponseCode == 200)
   {
     String payload = http.getString();
     deserializeJson(doc, payload);
+    Serial.println();
+    Serial.println((const char*)doc["all_traffic"][11]["point"]);
+    Serial.println((const char*)doc["all_traffic"][11]["traffic"]);
 
-    // *** write your code here ***
-    // set up JSON
-    //Serial.println();
-    
-
+    Serial.println((const char*)doc["all_traffic"][13]["point"]);
+    Serial.println((const char*)doc["all_traffic"][13]["traffic"]);
   }
   else
   {
@@ -47,8 +48,7 @@ void POST_traffic(String led)
   http.addHeader("Content-Type", "application/json");
 
   DynamicJsonDocument doc(2048);
-    doc["userId"] = 1;
-    doc["code"] = "t0vmh";
+    doc["code"] = "t0vmh"
     doc["traffic"] = led;
   serializeJson(doc, json);
 
