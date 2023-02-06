@@ -43,22 +43,35 @@ void loop()
   // Your can change everything that you want
   if (state == 1)
   {
-    // while led GREEN
+    digitalWrite(green, HIGH);
+    if ( debouncer.fell() ) { 
+      digitalWrite(green, LOW);
+      state = 2;      
+    }
   }
   else if (state == 2)
   {
-    // while led YELLOW
+    digitalWrite(yellow, HIGH);
+    delay(800);
+    digitalWrite(yellow, LOW);
+    state = 3;
   }
   else if (state == 3)
   {
-    // while led RED
+    digitalWrite(red, HIGH);
+    delay(500);
+    if(analogRead(ldr) <= 2500)
+    {
+      digitalWrite(red, LOW);
+      state = 1;
+    }
   }
 }
 
 void Connect_Wifi()
 {
-  const char *ssid = "Your Wifi Name";
-  const char *password = "Your Wifi Password";
+  const char *ssid = "POCOPHONE";
+  const char *password = "a1b2c3d4";
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED)
