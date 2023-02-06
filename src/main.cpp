@@ -13,7 +13,7 @@
 #define button 27
 
 int state = 1;
-int count = 0;
+int count = 1;
 Bounce debouncer = Bounce();
 
 void Connect_Wifi();
@@ -43,36 +43,44 @@ void loop()
   // Your can change everything that you want
   if (debouncer.fell()){
     state=2;
+    count=2;
   }
   if (state == 1)
   {
     // while led GREEN
-    POST_traffic("green");
     digitalWrite(red, LOW);
     digitalWrite(yellow, LOW);
     digitalWrite(green, HIGH);
-    GET_traffic();
+    if(count==1){
+      POST_traffic("green");
+      GET_traffic();
+      count=0;
+    }
   }
   else if (state == 2)
   {
     // while led YELLOW
-    POST_traffic("yellow");
     digitalWrite(green, LOW);
     digitalWrite(yellow, HIGH);
+    if(count==2){
+      POST_traffic("yellow");
+      count=3;
+    }
     delay(8000);
     state=3;
   }
   else if (state == 3){
-    POST_traffic("red");
     digitalWrite(yellow, LOW);
     digitalWrite(red, HIGH);
-    GET_traffic();
+    if(count==3){
+      POST_traffic("red");
+      GET_traffic();
+    }
     if(Light<=110){
       state=1;
+      count=1;
     }
   }
-  Serial.println(state);
-  delay(100);
 }
 
 void Connect_Wifi()
