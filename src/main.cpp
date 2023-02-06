@@ -11,14 +11,13 @@
 #define green 33
 #define ldr 32
 #define button 27
-
-#define light 2500
+#define light 2600
 
 int state = 1;
 int count = 0;
 Bounce debouncer = Bounce();
 
-void Connect_Wifi();
+//void Connect_Wifi();
 
 void setup()
 {
@@ -29,7 +28,7 @@ void setup()
   pinMode(ldr, INPUT);
   debouncer.attach(button, INPUT_PULLUP);
   debouncer.interval(25);
-  Connect_Wifi();
+  //Connect_Wifi();
 
   delay(200);
   // start LED with GREEN and POST to database
@@ -44,7 +43,9 @@ void loop()
   if (state == 1)
   {
     digitalWrite(green, HIGH);
-    if ( debouncer.fell() ) { 
+    debouncer.update();
+    if (debouncer.fell()) { 
+      Serial.println("ima here");
       digitalWrite(green, LOW);
       state = 2;      
     }
@@ -52,15 +53,16 @@ void loop()
   else if (state == 2)
   {
     digitalWrite(yellow, HIGH);
-    delay(800);
+    delay(8000);
     digitalWrite(yellow, LOW);
     state = 3;
   }
   else if (state == 3)
   {
+    Serial.println(analogRead(ldr));
     digitalWrite(red, HIGH);
-    delay(500);
-    if(analogRead(ldr) <= 2500)
+    //delay(5000);
+    if(analogRead(ldr) <= light)
     {
       digitalWrite(red, LOW);
       state = 1;
