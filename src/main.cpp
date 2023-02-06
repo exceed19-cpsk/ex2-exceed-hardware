@@ -4,20 +4,21 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <Bounce2.h>
-//#include "traffic.h"
+#include "traffic.h"
 
 #define red 26
 #define yellow 25
 #define green 33
 #define ldr 32
 #define button 27
-#define light 2550
+#define light 3000
 
 int state = 1;
 int count = 0;
 Bounce debouncer = Bounce();
 
 void Connect_Wifi();
+void is_light_change();
 
 void setup()
 {
@@ -33,39 +34,69 @@ void setup()
   delay(200);
   // start LED with GREEN and POST to database
   digitalWrite(green, HIGH);
-  //POST_traffic("green");
+  POST_traffic("green");
 }
-
+bool is_change = false;
 void loop()
 {
   // *** write your code here ***
   // Your can change everything that you want
+  
   if (state == 1)
   {
     digitalWrite(green, HIGH);
+    is_light_change();
     debouncer.update();
     if (debouncer.fell()) { 
-      Serial.println("ima here");
+      is_change = true;
+      //Serial.println("ima here");
       digitalWrite(green, LOW);
-      state = 2;      
+      state = 2;     
     }
   }
   else if (state == 2)
   {
     digitalWrite(yellow, HIGH);
+    is_light_change();
     delay(8000);
     digitalWrite(yellow, LOW);
     state = 3;
+    is_change = true;
   }
   else if (state == 3)
   {
-    Serial.println(analogRead(ldr));
+    //Serial.println(analogRead(ldr));
     digitalWrite(red, HIGH);
+    is_light_change();
     //delay(5000);
     if(analogRead(ldr) <= light)
     {
+      is_change = true;
       digitalWrite(red, LOW);
       state = 1;
+    }
+  }
+  
+}
+
+void is_light_change()
+{
+  if(is_change == true)
+  {
+    is_change = false;
+    if (state == 1)
+    {
+      POST_traffic("green");
+      GET_traffic();
+    }
+    else if (state == 2)
+    {
+      POST_traffic("yellow");
+    }
+    else if (state == 3)
+    {
+      POST_traffic("red");
+      GET_traffic();
     }
   }
 }

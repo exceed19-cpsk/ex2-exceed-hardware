@@ -25,21 +25,10 @@ void GET_traffic()
 
     // *** write your code here ***
     // set up JSON
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
+    //Serial.println();
+    Serial.println(GET + nearby_1);
+    Serial.println((const char*)doc[nearby_2]["traffic"]);
+
   }
   else
   {
@@ -59,11 +48,9 @@ void POST_traffic(String led)
   http.addHeader("Content-Type", "application/json");
 
   DynamicJsonDocument doc(2048);
-  // *** write your code here ***
-  // set up JSON
-  // .
-  // .
-  // .
+    doc["userId"] = 1;
+    doc["code"] = "t0vmh";
+    doc["traffic"] = led;
   serializeJson(doc, json);
 
   Serial.println("POST " + led);
