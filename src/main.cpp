@@ -6,19 +6,19 @@
 #include <Bounce2.h>
 #include "traffic.h"
 
-#define red <led red pin>
-#define yellow <led yellow pin>
-#define green <led green pin>
-#define ldr <ldr pin>
-#define button <button pin>
-
-#define light <แสดงมันมืด มีค่าเท่าไหร่>
+#define red 26
+#define yellow 25
+#define green 33
+#define ldr 32
+#define button 27
+#define light 3000
 
 int state = 1;
 int count = 0;
 Bounce debouncer = Bounce();
 
 void Connect_Wifi();
+void is_light_change();
 
 void setup()
 {
@@ -36,29 +36,75 @@ void setup()
   digitalWrite(green, HIGH);
   POST_traffic("green");
 }
-
+bool is_change = false;
 void loop()
 {
   // *** write your code here ***
   // Your can change everything that you want
+  
   if (state == 1)
   {
-    // while led GREEN
+    digitalWrite(green, HIGH);
+    is_light_change();
+    debouncer.update();
+    if (debouncer.fell()) { 
+      is_change = true;
+      //Serial.println("ima here");
+      digitalWrite(green, LOW);
+      state = 2;     
+    }
   }
   else if (state == 2)
   {
-    // while led YELLOW
+    digitalWrite(yellow, HIGH);
+    is_light_change();
+    delay(8000);
+    digitalWrite(yellow, LOW);
+    state = 3;
+    is_change = true;
   }
   else if (state == 3)
   {
-    // while led RED
+    //Serial.println(analogRead(ldr));
+    digitalWrite(red, HIGH);
+    is_light_change();
+    //delay(5000);
+    if(analogRead(ldr) <= light)
+    {
+      is_change = true;
+      digitalWrite(red, LOW);
+      state = 1;
+    }
+  }
+  
+}
+
+void is_light_change()
+{
+  if(is_change == true)
+  {
+    is_change = false;
+    if (state == 1)
+    {
+      POST_traffic("green");
+      GET_traffic();
+    }
+    else if (state == 2)
+    {
+      POST_traffic("yellow");
+    }
+    else if (state == 3)
+    {
+      POST_traffic("red");
+      GET_traffic();
+    }
   }
 }
 
 void Connect_Wifi()
 {
-  const char *ssid = "Your Wifi Name";
-  const char *password = "Your Wifi Password";
+  const char *ssid = "POCOPHONE";
+  const char *password = "a1b2c3d4";
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED)
