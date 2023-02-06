@@ -39,35 +39,36 @@ void setup()
 
 void loop()
 {
-  // *** write your code here ***
-  // Your can change everything that you want
-    debouncer.update();
+  debouncer.update();
+
   if (state == 1)
   {
-    POST_traffic("green");
-    GET_traffic();
     if ( debouncer.fell() )
     {
       digitalWrite(green, LOW);
+      digitalWrite(yellow,HIGH);
       state = 2;
     }
+    GET_traffic();
+
   }
   else if (state == 2)
   {
       POST_traffic("yellow");
-      digitalWrite(yellow,HIGH);
       delay(8000);
       state = 3;
 
   }
   else if (state == 3)
   {
-    POST_traffic("red");
-    GET_traffic();
+    
     digitalWrite(yellow,LOW);
     digitalWrite(red,HIGH);
-    if (analogRead(ldr)==light)
+    POST_traffic("red");
+    GET_traffic();
+    if (analogRead(ldr)<=light)
     {
+      delay(5000);
       digitalWrite(red,LOW);
       digitalWrite(green, HIGH);
       state = 1;
