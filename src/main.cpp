@@ -14,7 +14,7 @@
 
 #define light 1700
 
-int state = 1;
+int state = 0;
 int count = 0;
 Bounce debouncer = Bounce();
 
@@ -40,8 +40,12 @@ void setup()
 void loop()
 {
   debouncer.update();
-
-  if (state == 1)
+  if (state ==0){
+    POST_traffic("green");
+    GET_traffic();
+    state = 1;
+  }
+  else if (state == 1)
   {
     if ( debouncer.fell() )
     {
@@ -49,7 +53,6 @@ void loop()
       digitalWrite(yellow,HIGH);
       state = 2;
     }
-    GET_traffic();
 
   }
   else if (state == 2)
@@ -71,7 +74,7 @@ void loop()
       delay(5000);
       digitalWrite(red,LOW);
       digitalWrite(green, HIGH);
-      state = 1;
+      state = 0;
     }
   }
 }
