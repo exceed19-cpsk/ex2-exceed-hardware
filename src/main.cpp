@@ -17,7 +17,7 @@ int state = 1;
 int count = 0;
 Bounce debouncer = Bounce();
 
-//void Connect_Wifi();
+void Connect_Wifi();
 
 void setup()
 {
@@ -28,7 +28,7 @@ void setup()
   pinMode(ldr, INPUT);
   debouncer.attach(button, INPUT_PULLUP);
   debouncer.interval(25);
-  //Connect_Wifi();
+  Connect_Wifi();
 
   delay(200);
   // start LED with GREEN and POST to database
