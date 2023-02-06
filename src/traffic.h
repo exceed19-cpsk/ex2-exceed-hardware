@@ -5,7 +5,7 @@
 
 const String baseUrl = "https://exceed-hardware-stamp465.koyeb.app";
 
-const String point = "กลุ่มที่13";
+const String point = "13";
 const int nearby_1 = 12;
 const int nearby_2 = 14;
 
@@ -17,14 +17,12 @@ void GET_traffic()
   http.begin(url);
 
   Serial.println("Nearby traffic");
+  Serial.println(GET + nearby_1)
   int httpResponseCode = http.GET();
   if (httpResponseCode == 200)
   {
     String payload = http.getString();
     deserializeJson(doc, payload);
-
-    // *** write your code here ***
-    // set up JSON
     Serial.println();
     Serial.println((const char*)doc[1]["point"]);
     Serial.println((const char*)doc[1]["traffic"]);
@@ -48,9 +46,8 @@ void POST_traffic(String led)
   http.addHeader("Content-Type", "application/json");
 
   DynamicJsonDocument doc(2048);
-    doc["userId"] = 1;
-    doc["code"] = t0vmh
-    doc["traffic"] = LED;
+    doc["code"] = "t0vmh"
+    doc["traffic"] = led;
   serializeJson(doc, json);
 
   Serial.println("POST " + led);
