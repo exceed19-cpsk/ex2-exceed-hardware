@@ -5,9 +5,9 @@
 
 const String baseUrl = "https://exceed-hardware-stamp465.koyeb.app";
 
-const String point = "กลุ่มที่";
-const int nearby_1 = "กลุ่มใกล้เคียง (กลุ่มที่ +-1)";
-const int nearby_2 = "กลุ่มใกล้เคียง (กลุ่มที่ +-1)";
+const String point = "10";
+const int nearby_1 = 9;
+const int nearby_2 = 11;
 
 void GET_traffic()
 {
@@ -22,24 +22,12 @@ void GET_traffic()
   {
     String payload = http.getString();
     deserializeJson(doc, payload);
-
-    // *** write your code here ***
-    // set up JSON
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
-    // .
+    Serial.println("Current traffic");
+    Serial.println((const char*)doc["all_traffic"][9]["traffic"]);
+    Serial.print("Point 9");
+    Serial.println((const char*)doc["all_traffic"][8]["traffic"]);
+    Serial.print("Point 11");
+    Serial.println((const char*)doc["all_traffic"][10]["traffic"]);
   }
   else
   {
@@ -59,11 +47,8 @@ void POST_traffic(String led)
   http.addHeader("Content-Type", "application/json");
 
   DynamicJsonDocument doc(2048);
-  // *** write your code here ***
-  // set up JSON
-  // .
-  // .
-  // .
+  doc["code"] = "kaej2";
+  doc["traffic"] = led;
   serializeJson(doc, json);
 
   Serial.println("POST " + led);
@@ -72,6 +57,7 @@ void POST_traffic(String led)
   {
     Serial.print("Done");
     Serial.println();
+    Serial.println(http.getString());
   }
   else
   {

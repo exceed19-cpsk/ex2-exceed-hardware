@@ -18,7 +18,21 @@ int state = 0;
 int count = 0;
 Bounce debouncer = Bounce();
 
-void Connect_Wifi();
+void Connect_Wifi()
+{
+  const char *ssid = "Prae";
+  const char *password = "prae0000";
+  WiFi.begin(ssid, password);
+  Serial.print("Connecting to WiFi");
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.print("OK! IP=");
+  Serial.println(WiFi.localIP());
+  Serial.println("----------------------------------");
+}
 
 void setup()
 {
@@ -32,9 +46,7 @@ void setup()
   Connect_Wifi();
   
   delay(200);
-  // start LED with GREEN and POST to database
   digitalWrite(green, HIGH);
-  POST_traffic("green");
 }
 
 void loop()
@@ -79,18 +91,3 @@ void loop()
   }
 }
 
-void Connect_Wifi()
-{
-  const char *ssid = "Prae";
-  const char *password = "prae0000";
-  WiFi.begin(ssid, password);
-  Serial.print("Connecting to WiFi");
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.print("OK! IP=");
-  Serial.println(WiFi.localIP());
-  Serial.println("----------------------------------");
-}
