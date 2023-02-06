@@ -6,35 +6,33 @@
 #include <Bounce2.h>
 #include "traffic.h"
 
-#define red <led red pin>
-#define yellow <led yellow pin>
-#define green <led green pin>
-#define ldr <ldr pin>
-#define button <button pin>
-
-#define light <แสดงมันมืด มีค่าเท่าไหร่>
-
+#define RED 26
+#define YELLOW 25
+#define GREEN 33
+#define LDR 34
+#define BUTTON 27
+#define LIGHT analogread(LDR)
+int cnt = 1;
 int state = 1;
 int count = 0;
 Bounce debouncer = Bounce();
-
 void Connect_Wifi();
 
 void setup()
 {
   Serial.begin(115200);
-  pinMode(red, OUTPUT);
-  pinMode(yellow, OUTPUT);
-  pinMode(green, OUTPUT);
-  pinMode(ldr, INPUT);
-  debouncer.attach(button, INPUT_PULLUP);
+  pinMode(RED, OUTPUT);
+  pinMode(YELLOW, OUTPUT);
+  pinMode(GREEN, OUTPUT);
+  pinMode(LDR, INPUT);
+  debouncer.attach(BUTTON, INPUT_PULLUP);
   debouncer.interval(25);
   Connect_Wifi();
 
   delay(200);
   // start LED with GREEN and POST to database
-  digitalWrite(green, HIGH);
-  POST_traffic("green");
+  digitalWrite(GREEN, 1);
+  POST_traffic("GREEN");
 }
 
 void loop()
@@ -57,8 +55,8 @@ void loop()
 
 void Connect_Wifi()
 {
-  const char *ssid = "Your Wifi Name";
-  const char *password = "Your Wifi Password";
+  const char *ssid = "nitro 5";
+  const char *password = "12345687";
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED)
