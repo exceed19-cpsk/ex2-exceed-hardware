@@ -11,7 +11,7 @@
 #define green 33
 #define ldr 32
 #define button 27
-#define light 2600
+#define light 2550
 
 int state = 1;
 int count = 0;
