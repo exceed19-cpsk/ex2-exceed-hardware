@@ -26,8 +26,7 @@ void GET_traffic()
     // *** write your code here ***
     // set up JSON
     //Serial.println();
-    Serial.println(GET + nearby_1);
-    Serial.println((const char*)doc[nearby_2]["traffic"]);
+    
 
   }
   else
