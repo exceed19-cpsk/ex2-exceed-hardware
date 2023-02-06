@@ -50,7 +50,7 @@ void GET_traffic()
   Serial.println("----------------------------------");
 }
 
-void POST_traffic(String led)
+void POST_traffic(int led)
 {
   const String url = baseUrl + "/my_traffic?point=" + point;
   String json;
