@@ -34,7 +34,7 @@ void setup()
   delay(200);
   // start LED with GREEN and POST to database
   digitalWrite(green, HIGH);
-  POST_traffic("green");
+  //POST_traffic("green");
 }
 
 void loop()
