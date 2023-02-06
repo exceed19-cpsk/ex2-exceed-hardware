@@ -4,15 +4,15 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <Bounce2.h>
-#include "traffic.h"
+// #include "traffic.h"
 
-#define red <led red pin>
-#define yellow <led yellow pin>
-#define green <led green pin>
-#define ldr <ldr pin>
-#define button <button pin>
+#define red 26
+#define yellow 25
+#define green 33
+#define ldr 32
+#define button 27
 
-#define light <แสดงมันมืด มีค่าเท่าไหร่>
+// #define light <แสดงมันมืด มีค่าเท่าไหร่>
 
 int state = 1;
 int count = 0;
@@ -34,31 +34,50 @@ void setup()
   delay(200);
   // start LED with GREEN and POST to database
   digitalWrite(green, HIGH);
-  POST_traffic("green");
+  // POST_traffic("green");
 }
 
 void loop()
 {
   // *** write your code here ***
   // Your can change everything that you want
+  debouncer.update();
   if (state == 1)
   {
     // while led GREEN
+    if (debouncer.fell()) {
+      state = 2;
+      digitalWrite(green, LOW);
+      digitalWrite(yellow, HIGH);
+    }
   }
   else if (state == 2)
   {
     // while led YELLOW
+    delay(8000);
+    state = 3;
+    digitalWrite(yellow, LOW);
+    digitalWrite(red, HIGH);
   }
   else if (state == 3)
   {
     // while led RED
+    delay(5000);
+    while (1) {
+      if (analogRead(ldr) < 2500) {
+        state = 1;
+        digitalWrite(red, LOW);
+        digitalWrite(green, HIGH);
+        break;
+      }
+    } 
   }
 }
 
 void Connect_Wifi()
 {
-  const char *ssid = "Your Wifi Name";
-  const char *password = "Your Wifi Password";
+  const char *ssid = "choon";
+  const char *password = "12345678";
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED)
