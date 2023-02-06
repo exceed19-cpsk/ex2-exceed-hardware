@@ -6,13 +6,11 @@
 #include <Bounce2.h>
 #include "traffic.h"
 
-#define red <led red pin>
-#define yellow <led yellow pin>
-#define green <led green pin>
-#define ldr <ldr pin>
-#define button <button pin>
-
-#define light <แสดงมันมืด มีค่าเท่าไหร่>
+#define red 26
+#define yellow 25
+#define green 33
+#define ldr 32
+#define button 27
 
 int state = 1;
 int count = 0;
@@ -39,26 +37,48 @@ void setup()
 
 void loop()
 {
+  int Light = map(analogRead(ldr),0,4095,0,255);
+  debouncer.update();
   // *** write your code here ***
   // Your can change everything that you want
+  if (debouncer.fell()){
+    state=2;
+  }
   if (state == 1)
   {
     // while led GREEN
+    POST_traffic("green");
+    digitalWrite(red, LOW);
+    digitalWrite(yellow, LOW);
+    digitalWrite(green, HIGH);
+    GET_traffic();
   }
   else if (state == 2)
   {
     // while led YELLOW
+    POST_traffic("yellow");
+    digitalWrite(green, LOW);
+    digitalWrite(yellow, HIGH);
+    delay(8000);
+    state=3;
   }
-  else if (state == 3)
-  {
-    // while led RED
+  else if (state == 3){
+    POST_traffic("red");
+    digitalWrite(yellow, LOW);
+    digitalWrite(red, HIGH);
+    GET_traffic();
+    if(Light<=110){
+      state=1;
+    }
   }
+  Serial.println(state);
+  delay(100);
 }
 
 void Connect_Wifi()
 {
-  const char *ssid = "Your Wifi Name";
-  const char *password = "Your Wifi Password";
+  const char *ssid = "TAGCH";
+  const char *password = "025123301";
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED)
