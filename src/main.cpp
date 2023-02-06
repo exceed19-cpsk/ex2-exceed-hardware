@@ -12,7 +12,7 @@
 #define ldr 32
 #define button 27
 
-#define light <แสดงมันมืด มีค่าเท่าไหร่>
+#define light 2500
 
 int state = 1;
 int count = 0;
