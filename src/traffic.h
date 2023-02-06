@@ -9,8 +9,8 @@ const String baseUrl = "https://exceed-hardware-stamp465.koyeb.app";
 const String AGurl = "https://exceed-hardware-stamp465.koyeb.app/all_traffic";
 
 const String point = "1";
-const String nearby_1 = "2";
-const String nearby_2 = "15";
+const int nearby_1 = 2;
+const int nearby_2 = 15;
 
 void GET_traffic() {
   Serial.println("Start!!!");
@@ -24,15 +24,16 @@ void GET_traffic() {
   {
     String payload = http.getString();
     deserializeJson(doc, payload);
-    Serial.println(doc["all_traffic"].size());
     JsonArray all_traffic = doc["all_traffic"].as<JsonArray>();
-    for (JsonObject x : all_traffic) {
-      String tmp = x["point"].as<String>();
-      if (tmp == point || tmp == nearby_1 || tmp == nearby_2) {
-        Serial.println("Point: " + tmp);
-        Serial.println("Traffic: " + x["traffic"].as<String>());
-      }
-    }
+
+    Serial.println("Point: " + doc["all_traffic"][0]["point"].as<String>());
+    Serial.println("Traffic: " + doc["all_traffic"][0]["traffic"].as<String>());
+
+    Serial.println("Point: " + doc["all_traffic"][nearby_1 - 1]["point"].as<String>());
+    Serial.println("Traffic: " + doc["all_traffic"][1][nearby_1 - 1].as<String>());
+
+    Serial.println("Point: " + doc["all_traffic"][nearby_2 - 1]["point"].as<String>());
+    Serial.println("Traffic: " + doc["all_traffic"][nearby_2 - 1]["traffic"].as<String>());
   }
   else
   {
