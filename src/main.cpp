@@ -4,7 +4,7 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <Bounce2.h>
-// #include "traffic.h"
+#include "traffic.h"
 
 #define red 26
 #define yellow 25
@@ -34,7 +34,7 @@ void setup()
   delay(200);
   // start LED with GREEN and POST to database
   digitalWrite(green, HIGH);
-  // POST_traffic("green");
+  POST_traffic("green");
 }
 
 void loop()
@@ -49,6 +49,7 @@ void loop()
       state = 2;
       digitalWrite(green, LOW);
       digitalWrite(yellow, HIGH);
+      POST_traffic("yellow");
     }
   }
   else if (state == 2)
@@ -58,6 +59,8 @@ void loop()
     state = 3;
     digitalWrite(yellow, LOW);
     digitalWrite(red, HIGH);
+    POST_traffic("red");
+    GET_traffic();
   }
   else if (state == 3)
   {
@@ -68,6 +71,8 @@ void loop()
         state = 1;
         digitalWrite(red, LOW);
         digitalWrite(green, HIGH);
+        POST_traffic("green");
+        GET_traffic();
         break;
       }
     } 
