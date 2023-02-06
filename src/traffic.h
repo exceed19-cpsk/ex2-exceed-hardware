@@ -5,12 +5,16 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+//0 1 2
+//G Y R
+
 const String baseUrl = "https://exceed-hardware-stamp465.koyeb.app";
 const String AGurl = "https://exceed-hardware-stamp465.koyeb.app/all_traffic";
 
 const String point = "1";
 const int nearby_1 = 2;
 const int nearby_2 = 15;
+const String Color[3] = {"Green", "Yellow", "Red"};
 
 void GET_traffic() {
   Serial.println("Start!!!");
@@ -44,7 +48,7 @@ void GET_traffic() {
   Serial.println("----------------------------------");
 }
 
-void POST_traffic(String led)
+void POST_traffic(int led)
 {
   const String url = baseUrl + "/my_traffic?point=" + point;
   String json;
@@ -54,10 +58,10 @@ void POST_traffic(String led)
 
   DynamicJsonDocument doc(2048);
   doc["code"] = "317cwk";
-  doc["traffic"] = led;
+  doc["traffic"] = Color[led];
   serializeJson(doc, json);
 
-  Serial.println("POST " + led);
+  Serial.println("POST " + Color[led]);
   int httpResponseCode = http.POST(json);
   if (httpResponseCode == 200)
   {
