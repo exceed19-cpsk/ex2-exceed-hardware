@@ -6,59 +6,61 @@
 #include <Bounce2.h>
 #include "traffic.h"
 
-#define red <led red pin>
-#define yellow <led yellow pin>
-#define green <led green pin>
-#define ldr <ldr pin>
-#define button <button pin>
+#define BUTTON 27
+#define GREEN 33
+#define RED 26
+#define YELLOW 25
+#define LDR 32
 
-#define light <แสดงมันมืด มีค่าเท่าไหร่>
-
-int state = 1;
-int count = 0;
+int stage = 0;
+int lumine = 0;
 Bounce debouncer = Bounce();
 
 void Connect_Wifi();
 
-void setup()
-{
-  Serial.begin(115200);
-  pinMode(red, OUTPUT);
-  pinMode(yellow, OUTPUT);
-  pinMode(green, OUTPUT);
-  pinMode(ldr, INPUT);
-  debouncer.attach(button, INPUT_PULLUP);
-  debouncer.interval(25);
-  Connect_Wifi();
-
-  delay(200);
-  // start LED with GREEN and POST to database
-  digitalWrite(green, HIGH);
-  POST_traffic("green");
+void setup() {
+    Serial.begin(115200);
+    pinMode(BUTTON, INPUT_PULLUP);
+    debouncer.attach(BUTTON);
+    debouncer.interval(5);
+    pinMode(GREEN, OUTPUT);
+    pinMode(YELLOW, OUTPUT);
+    pinMode(RED, OUTPUT);
 }
-
-void loop()
-{
-  // *** write your code here ***
-  // Your can change everything that you want
-  if (state == 1)
-  {
-    // while led GREEN
-  }
-  else if (state == 2)
-  {
-    // while led YELLOW
-  }
-  else if (state == 3)
-  {
-    // while led RED
-  }
+void loop(){
+    debouncer.update();
+    if (debouncer.fell() && stage == 0) { 
+      stage = 1;
+    }
+    if (stage == 0) { //Green
+        digitalWrite(GREEN, HIGH);
+        digitalWrite(YELLOW, LOW);
+        digitalWrite(RED, LOW);
+    } 
+    else if (stage == 1) { //Yellow
+        digitalWrite(GREEN, LOW);
+        digitalWrite(YELLOW, HIGH);
+        digitalWrite(RED, LOW);
+        delay(8000); //wait 8 seconds
+        stage = 2; //go to stage 2
+    } 
+    else if (stage == 2) { //Red
+        digitalWrite(GREEN, LOW);
+        digitalWrite(YELLOW, LOW);
+        digitalWrite(RED, HIGH);
+        delay(5000); //wait 5 seconds
+        lumine = map(analogRead(LDR),1500,3500,0,255);
+        if (lumine < 100) { //if dark go to stage 0
+            stage = 0;
+        }
+    }
+    Serial.println(stage); //print stage
 }
 
 void Connect_Wifi()
 {
-  const char *ssid = "Your Wifi Name";
-  const char *password = "Your Wifi Password";
+  const char *ssid = "vivo 1818";
+  const char *password = "12345678";
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED)
