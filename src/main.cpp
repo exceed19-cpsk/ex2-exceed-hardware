@@ -32,7 +32,6 @@ void setup()
   delay(200);
   // start LED with GREEN and POST to database
   digitalWrite(green, HIGH);
-  POST_traffic("green");
 }
 
 void loop()
@@ -75,6 +74,7 @@ void loop()
     if(count==3){
       POST_traffic("red");
       GET_traffic();
+      count=1;
     }
     if(Light<=110){
       state=1;
