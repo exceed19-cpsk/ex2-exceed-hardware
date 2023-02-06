@@ -3,7 +3,7 @@
 #include <ArduinoJson.h>
 #include <Bounce2.h>
 
-const String baseUrl = "https://exceed-hardware-stamp465.koyeb.app/all_traffic";
+const String baseUrl = "https://exceed-hardware-stamp465.koyeb.app";
 
 const String point = "15";
 const int nearby_1 = 14;
@@ -13,7 +13,7 @@ void GET_traffic()
 {
   DynamicJsonDocument doc(65536);
   HTTPClient http;
-  const String url = baseUrl + "/t4u2bf";
+  const String url = baseUrl + "/all_traffic";
   http.begin(url);
 
   Serial.println("Nearby traffic");
@@ -28,9 +28,11 @@ void GET_traffic()
     //String lefturl = url + "?point=14";
     //String righturl = url + "?point=1";
     Serial.print("group 14: ");
-    Serial.println((const char*)doc["all_traffic"][nearby_1]);
+    Serial.println((const char*)doc["all_traffic"][nearby_1-1]["point"]);
+    Serial.println((const char*)doc["all_traffic"][nearby_1-1]["traffic"]);
     Serial.print("group 1: ");
-    Serial.println((const char*)doc["all_traffic"][nearby_2]);
+    Serial.println((const char*)doc["all_traffic"][nearby_2-1]["point"]);
+    Serial.println((const char*)doc["all_traffic"][nearby_2-1]["traffic"]);
 
   }
   else
@@ -51,50 +53,9 @@ void POST_traffic(String led)
   http.addHeader("Content-Type", "application/json");
 
   DynamicJsonDocument doc(2048);
-  doc["all_traffic"]["point"] = "15";
-  doc["all_traffic"]["traffic"] = led;
+  doc["code"] = "t4u2bf";
+  doc["traffic"] = led;
 
-  serializeJson(doc, json);
-
-  Serial.println("POST " + led);
-  int httpResponseCode = http.POST(json);
-  if (httpResponseCode == 200)
-  {
-    Serial.print("Done");
-    Serial.println();
-  }
-  else
-  {
-    Serial.print("Error ");
-    Serial.println(httpResponseCode);
-  }
-
-  Serial.println("----------------------------------");
-}
-  else
-  {
-    Serial.print("Error ");
-    Serial.println(httpResponseCode);
-  }
-
-  Serial.println("----------------------------------");
-}
-
-void POST_traffic(String led)
-{
-  const String url = baseUrl + "/my_traffic?point=" + point;
-  String json;
-  HTTPClient http;
-  http.begin(url);
-  http.addHeader("Content-Type", "application/json");
-
-  DynamicJsonDocument doc(2048);
-  // *** write your code here ***
-  // set up JSON
-  doc["my_traffic"]["point"] = point;
-  doc["my_traffic"]["point"] = point;
-  
-  
   serializeJson(doc, json);
 
   Serial.println("POST " + led);
